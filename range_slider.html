@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel="stylesheet" href="range_slider.css">
+        <style>
+            #price {
+                padding: 30px;
+                background: #faffee;
+                width: 500px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="price"></div>
+        <div>min<span id="minval"></span></div>
+        <div>max<span id="maxval"></span></div>
+
+
+        <script type="text/javascript" src="vendor/uuidv4/uuidv4.js"></script>
+        <script type="text/javascript" src="range_slider.js"></script>
+        <script type="text/javascript">
+            function onMinValueChange(val){
+                document.querySelector("#minval").textContent = val;
+            }
+            function onMaxValueChange(val){
+                document.querySelector("#maxval").textContent = val;
+            }
+            rangeSlider(document.querySelector("#price"), {
+                min_val: 200,
+                max_val: 500,
+                val_min: 100,
+                val_max: 600,
+                onMinValueChanged:onMinValueChange,
+                onMaxValueChanged:onMaxValueChange,
+            });
+        </script>
+    </body>
+</html>
