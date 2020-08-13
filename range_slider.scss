@@ -5,61 +5,48 @@
 //     border: 1px solid #eee;
 // }
 // .range_slider_wrapper {
+
+
+
 .range_slider {
-    $handle_ht: 16px;
-    $range_ht: 8px;
+    $slider_height: 20px;
+    $handle_width: $slider_height;
+    $handle_height: $slider_height;
+    // $range_ht: 8px;
     
 
     position: relative;
-    height: 1em;
+    width: 100%;
+    height: $slider_height;
+    border-radius: calc(#{$slider_height} / 2);
     display: block;
-
-    @mixin range() {
-        position: relative;
-
-        width: 100%;
-        height: $range_ht;
-        border: 1px solid #eee;
-        border-radius: calc(#{$range_ht} / 2);
-
-        box-sizing: border-box;
-        top: 50%;
-        transform: translateY(-50%);
-    }
+    background: #eee;
+    overflow: hidden;
 
     .outer_range {
-        @include range;
+        display: none;
     }
 
-    .inner_range {
-        @include range;
+    .band {
         position: absolute;
-        width: unset;
-        left: 0;
-        right: 30%;
-        background: #cee;
+        top: 50%;
+        transform: translatey(-50%);
+        height: calc(#{$slider_height} / 3);
+        background: #fff;
     }
 
 
-    @mixin handle() {
+    .handle {
+        width:  $handle_width;
+        height: $handle_height;
+        border-radius: calc(#{$handle_height} / 2);
+        
         position: absolute;
-        width: $handle_ht;
-        height: $handle_ht;
-        border-radius: calc(#{$handle_ht} / 2);
-        background: #eee;
-
         top: 50%;
         transform: translateY(-50%);
-    }
 
-    .handle_min {
-        @include handle;
-        // left: 20%;
+        // border-radius: calc(#{$handle_ht} / 2);
+        background: #A9C398;
     }
-
-    .handle_max {
-        @include handle;
-        // left: 70%;
-    }
-
 }
+    
