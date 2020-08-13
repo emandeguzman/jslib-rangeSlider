@@ -83,6 +83,29 @@ function rangeSlider (el, $options){
     adjustBand();
     //#endregion
 
+    //#region resize observer
+    const resizeObserver = new ResizeObserver(entries => {
+        console.log("resized")
+        for (let entry of entries) {
+            //#region set position min & max limit
+            const handle_width =  handles[0].scrollWidth;
+            props.pos_min = 0;
+            props.pos_max = root.scrollWidth - handle_width;
+            //#endregion
+        
+            //#region position handle
+            // for (let i = 0; i < props.values.length; i++) {
+            //     handles[i].style.left = valToPos(handles[i].getAttribute("data-value")) + "px";
+            // }
+            //#endregion
+
+            adjustBand();
+        }
+    });
+
+    resizeObserver.observe(el);
+    //#region 
+
     //#region dragging
     function dragElement(elmnt) {
         let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
