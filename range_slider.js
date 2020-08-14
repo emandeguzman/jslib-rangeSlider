@@ -18,6 +18,11 @@ function rangeSlider (el, $options){
     }
     //#endregion
 
+    //#region set value min & max limit (to make sure min_val is not less than val_min and same goes for max_val)
+    props.val_min = Math.min(...props.values, props.val_min);
+    props.val_max = Math.max(...props.values, props.val_max);
+    //#endregion
+
     //#region methods
     function valToPos(val) {
         const p = (val-props.val_min)/(props.val_max-props.val_min);
@@ -53,54 +58,37 @@ function rangeSlider (el, $options){
 
     //#endregion
 
-    //#region set position min & max limit
-    const handle_width =  handles[0].scrollWidth;
-    props.pos_min = 0;
-    props.pos_max = root.scrollWidth - handle_width;
-    //#endregion
+    //#region set size, position & limits
+    function setUi() {
+        //get container width
+        //get root width
+        const maxWidth = el.getBoundingClientRect().width;
 
-    //#region  set value min & max limit
-    props.val_min = Math.min(...props.values, props.val_min);
-    props.val_max = Math.max(...props.values, props.val_max);
-    //#endregion
+        //set position min & max limit
+        const handle_width =  handles[0].scrollWidth;
+        props.pos_min = 0;
+        props.pos_max = maxWidth - handle_width;
 
-    //#region position handle
-    for (let i = 0; i < props.values.length; i++) {
-        handles[i].style.left = valToPos(handles[i].getAttribute("data-value")) + "px";
-    }
-    //#endregion
-
-    //#region adjust range band
-    function adjustBand() {
-        const positions = [];
-        for (let i = 0; i < handles.length; i++) {
-            positions.push(parseInt(handles[i].style.left.replace("px", "")));
+        //set handle positions based on value
+        const positions = []; // to be used when setting to band size 
+        for (let i = 0; i < props.values.length; i++) {
+            const position = valToPos(handles[i].getAttribute("data-value"));
+            positions.push(position);
+            handles[i].style.left = `${position}px`;
         }
 
+        //set band size and position
         band.style.left = Math.min(...positions) + "px";
         band.style.right = (props.pos_max - Math.max(...positions)) + "px";
     }
-    adjustBand();
-    //#endregion
+
+    setUi();
+    //#endregion    
 
     //#region resize observer
     const resizeObserver = new ResizeObserver(entries => {
         console.log("resized")
-        for (let entry of entries) {
-            //#region set position min & max limit
-            const handle_width =  handles[0].scrollWidth;
-            props.pos_min = 0;
-            props.pos_max = root.scrollWidth - handle_width;
-            //#endregion
-        
-            //#region position handle
-            // for (let i = 0; i < props.values.length; i++) {
-            //     handles[i].style.left = valToPos(handles[i].getAttribute("data-value")) + "px";
-            // }
-            //#endregion
-
-            adjustBand();
-        }
+        setUi();
     });
 
     resizeObserver.observe(el);
@@ -168,12 +156,14 @@ function rangeSlider (el, $options){
 
 
             elmnt.style.left = pos + "px";
+            elmnt.setAttribute("data-value", posToVal(pos));
 
             //#region  throw onValueChange event
             const values = [];
             for (let i=0; i < handles.length; i++) {
-                values.push(posToVal(handles[i].style.left.replace("px","")));
-                adjustBand();
+                // values.push(posToVal(handles[i].style.left.replace("px","")));
+                values.push(handles[i].getAttribute("data-value"));
+                setUi();
             }
             props.onValueChanged(values);
             //#endregion

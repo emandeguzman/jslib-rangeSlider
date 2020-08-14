@@ -16,7 +16,9 @@
     
 
     position: relative;
+    min-width: 100%;
     width: 100%;
+    max-width: 100%;
     height: $slider_height;
     border-radius: calc(#{$slider_height} / 2);
     display: block;
